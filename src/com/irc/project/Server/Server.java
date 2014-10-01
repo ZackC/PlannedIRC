@@ -9,12 +9,12 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
-import com.irc.project.Client.Framework.PlugInInterface;
-import com.irc.project.Client.Framework.Authentication.AuthenticationPlugin;
-import com.irc.project.Client.Framework.ColorPlugin.ColorPlugin;
-import com.irc.project.Client.Framework.LogPlugin.LogPlugin;
-import com.irc.project.Client.Framework.ReverseEnryptionPlugin.ReverseEncryptionPlugin;
-import com.irc.project.Client.Framework.Rot13Plugin.Rot13EncryptionPlugin;
+import com.irc.project.Framework.PlugInInterface;
+import com.irc.project.Framework.Authentication.AuthenticationPlugin;
+import com.irc.project.Framework.ColorPlugin.ColorPlugin;
+import com.irc.project.Framework.LogPlugin.LogPlugin;
+import com.irc.project.Framework.ReverseEnryptionPlugin.ReverseEncryptionPlugin;
+import com.irc.project.Framework.Rot13Plugin.Rot13EncryptionPlugin;
 import com.irc.project.Message.GeneralMessageType;
 
 /**

@@ -6,7 +6,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 
-import com.irc.project.Client.Framework.PlugInInterface;
+import com.irc.project.Framework.PlugInInterface;
 
 public class OptionsPanel extends Panel {
 

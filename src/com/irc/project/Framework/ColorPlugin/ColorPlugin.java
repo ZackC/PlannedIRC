@@ -1,4 +1,4 @@
-package com.irc.project.Client.Framework.ColorPlugin;
+package com.irc.project.Framework.ColorPlugin;
 
 import java.awt.Color;
 import java.awt.FlowLayout;
@@ -12,7 +12,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 
 import com.irc.project.Client.Client;
-import com.irc.project.Client.Framework.PlugInInterface;
+import com.irc.project.Framework.PlugInInterface;
 import com.irc.project.Message.GeneralMessageType;
 import com.irc.project.Message.Message;
 import com.irc.project.Server.ServerConnection;

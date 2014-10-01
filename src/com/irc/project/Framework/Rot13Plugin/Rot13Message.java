@@ -1,4 +1,4 @@
-package com.irc.project.Client.Framework.Rot13Plugin;
+package com.irc.project.Framework.Rot13Plugin;
 
 import java.io.Serializable;
 

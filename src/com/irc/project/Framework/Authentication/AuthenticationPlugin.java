@@ -1,4 +1,4 @@
-package com.irc.project.Client.Framework.Authentication;
+package com.irc.project.Framework.Authentication;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -10,12 +10,14 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import com.irc.project.Client.Client;
-import com.irc.project.Client.Framework.PlugInInterface;
+import com.irc.project.Framework.PlugInInterface;
 import com.irc.project.Message.GeneralMessageType;
 import com.irc.project.Message.Message;
 import com.irc.project.Server.Server;
@@ -62,13 +64,23 @@ public class AuthenticationPlugin implements PlugInInterface {
 			frame.setVisible(false);
 			frame.dispose();
 		} else if (type instanceof Client) {
-			JFrame frame = new JFrame("Enter Server Password");
+			JFrame frame = new JFrame("Login Frame");
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			frame.getContentPane().setLayout(new FlowLayout());
-			frame.getContentPane().add(new JLabel("Enter Server's password"));
+			frame.getContentPane().setLayout(
+					new BoxLayout(frame.getContentPane(), BoxLayout.PAGE_AXIS));
+			JPanel usernamePanel = new JPanel();
+			usernamePanel.setLayout(new FlowLayout());
+			usernamePanel.add(new JLabel("Enter username: "));
+			JTextField userNameField = new JTextField();
+			userNameField.setPreferredSize(new Dimension(150, 30));
+			usernamePanel.add(userNameField);
+			frame.add(usernamePanel);
+			JPanel passwordPanel = new JPanel();
+			passwordPanel.setLayout(new FlowLayout());
+			passwordPanel.add(new JLabel("Enter Server's password"));
 			final JTextField checkPasswordField = new JTextField();
 			checkPasswordField.setPreferredSize(new Dimension(150, 30));
-			frame.getContentPane().add(checkPasswordField);
+			passwordPanel.add(checkPasswordField);
 			checkPasswordField.addKeyListener(new KeyAdapter() {
 				@Override
 				public void keyPressed(KeyEvent evt) {
@@ -81,7 +93,7 @@ public class AuthenticationPlugin implements PlugInInterface {
 					}
 				}
 			});
-			frame.setSize(300, 60);
+			frame.add(passwordPanel);
 			frame.pack();
 			frame.setVisible(true);
 			boolean correctPassword = false;

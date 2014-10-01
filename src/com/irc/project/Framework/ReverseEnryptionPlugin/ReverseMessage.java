@@ -1,4 +1,4 @@
-package com.irc.project.Client.Framework.ReverseEnryptionPlugin;
+package com.irc.project.Framework.ReverseEnryptionPlugin;
 
 import java.io.Serializable;
 

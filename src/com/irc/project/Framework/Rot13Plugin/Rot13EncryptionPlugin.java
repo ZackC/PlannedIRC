@@ -1,4 +1,4 @@
-package com.irc.project.Client.Framework.ReverseEnryptionPlugin;
+package com.irc.project.Framework.Rot13Plugin;
 
 import java.awt.Panel;
 import java.awt.TextArea;
@@ -9,14 +9,14 @@ import java.util.List;
 import javax.swing.JCheckBox;
 
 import com.irc.project.Client.Client;
-import com.irc.project.Client.Framework.PlugInInterface;
+import com.irc.project.Framework.PlugInInterface;
 import com.irc.project.Message.GeneralMessageType;
 import com.irc.project.Message.Message;
 import com.irc.project.Server.ServerConnection;
 
-public class ReverseEncryptionPlugin implements PlugInInterface {
+public class Rot13EncryptionPlugin implements PlugInInterface {
 
-	JCheckBox reverseEncyrptionCheckBox = null;
+	JCheckBox rot13EncyrptionCheckBox = null;
 
 	@Override
 	public void logInAction(Object type) {
@@ -26,19 +26,16 @@ public class ReverseEncryptionPlugin implements PlugInInterface {
 
 	@Override
 	public GeneralMessageType sendMessageAction(GeneralMessageType msg) {
-		if (reverseEncyrptionCheckBox != null
-				&& reverseEncyrptionCheckBox.isSelected()) {
-			System.out.println("adding reverse encyryption");
-			GeneralMessageType resultMessage = new ReverseMessage(msg);
-			System.out.println("reverse encrypted message: "
+		if (rot13EncyrptionCheckBox != null && rot13EncyrptionCheckBox.isSelected()) {
+			System.out.println("adding rot13 encyryption");
+			GeneralMessageType resultMessage = new Rot13Message(msg);
+			System.out.println("rot13 encrypted message: "
 					+ resultMessage.getContent());
-			System.out.println("reverse encrypted header: "
-					+ resultMessage.getHeader());
+			System.out
+					.println("rot13 encrypted header: " + resultMessage.getHeader());
 			return resultMessage;
 		} else {
-			if (reverseEncyrptionCheckBox != null) {
-				System.out.println(reverseEncyrptionCheckBox.isSelected());
-			}
+			System.out.println("not using rot13 encryption");
 			return msg;
 		}
 
@@ -48,16 +45,16 @@ public class ReverseEncryptionPlugin implements PlugInInterface {
 	public GeneralMessageType recieveMessageAction(Object type,
 			GeneralMessageType msg, ServerConnection sc) {
 		if (type instanceof Client) {
-			System.out.println("reverse header recieved: " + msg.getHeader());
-			if (msg.getHeader().startsWith("reverse")) {
-				if (msg.getHeader().length() > 9) {
-					System.out.println("found reverse answers");
-					String header = msg.getHeader().substring(9); // removing the
-																												// "reverse, "
+			System.out.println("rot13 header recieved: " + msg.getHeader());
+			if (msg.getHeader().startsWith("rot13")) {
+				if (msg.getHeader().length() > 7) {
+					System.out.println("found rot13 answers");
+					String header = msg.getHeader().substring(7); // removing the
+																												// "rot13, "
 																												// encryption tag so the
 																												// next tag can be
 																												// handled.
-					String content = ReverseMessage.decrypt(msg.getContent());
+					String content = Rot13Message.decrypt(msg.getContent());
 					return (new Message(header, content));
 				}
 			}
@@ -76,14 +73,14 @@ public class ReverseEncryptionPlugin implements PlugInInterface {
 	@Override
 	public List<String> getHeaders() {
 		List<String> resultList = new LinkedList<String>();
-		resultList.add("reverse");
+		resultList.add("rot13");
 		return resultList;
 	}
 
 	@Override
 	public void drawSelectionOption(Panel panel, TextArea ta) {
-		reverseEncyrptionCheckBox = new JCheckBox("reverse encryption:");
-		panel.add(reverseEncyrptionCheckBox);
+		rot13EncyrptionCheckBox = new JCheckBox("rot13 encryption:");
+		panel.add(rot13EncyrptionCheckBox);
 
 	}
 

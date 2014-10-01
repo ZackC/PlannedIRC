@@ -1,4 +1,4 @@
-package com.irc.project.Client.Framework;
+package com.irc.project.Framework;
 
 import java.awt.Panel;
 import java.awt.TextArea;

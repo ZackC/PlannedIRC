@@ -1,4 +1,4 @@
-package com.irc.project.Client.Framework.LogPlugin;
+package com.irc.project.Framework.LogPlugin;
 
 import java.awt.BorderLayout;
 import java.awt.Panel;
@@ -13,7 +13,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 
 import com.irc.project.Client.Client;
-import com.irc.project.Client.Framework.PlugInInterface;
+import com.irc.project.Framework.PlugInInterface;
 import com.irc.project.Message.GeneralMessageType;
 import com.irc.project.Server.Server;
 import com.irc.project.Server.ServerConnection;
