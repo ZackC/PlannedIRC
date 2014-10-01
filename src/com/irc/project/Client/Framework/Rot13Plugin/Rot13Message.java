@@ -47,11 +47,13 @@ public class Rot13Message implements GeneralMessageType, Serializable {
 		return new String(oldContentArray);
 	}
 
+	@Override
 	public void setHeader(String newHeader) {
 		msg.setHeader(newHeader);
 	}
 
 	public static String decrypt(String message) {
+		System.out.println("rot13 decryption result: " + alterString(message));
 		return alterString(message);
 	}
 }

@@ -11,6 +11,10 @@ import java.util.List;
 
 import com.irc.project.Client.Framework.PlugInInterface;
 import com.irc.project.Client.Framework.Authentication.AuthenticationPlugin;
+import com.irc.project.Client.Framework.ColorPlugin.ColorPlugin;
+import com.irc.project.Client.Framework.LogPlugin.LogPlugin;
+import com.irc.project.Client.Framework.ReverseEnryptionPlugin.ReverseEncryptionPlugin;
+import com.irc.project.Client.Framework.Rot13Plugin.Rot13EncryptionPlugin;
 import com.irc.project.Message.GeneralMessageType;
 
 /**
@@ -45,9 +49,12 @@ public class Server {
 	 */
 	public Server(int port) throws IOException {
 		ServerSocket server = new ServerSocket(port);
-		plugIns.add(new AuthenticationPlugin()); // add the plugins to the system
-		// here.
-		// plugIns.add(new Rot13EncryptionPlugin());
+		// add the plugins to the system here
+		plugIns.add(new AuthenticationPlugin());
+		plugIns.add(new Rot13EncryptionPlugin());
+		plugIns.add(new ReverseEncryptionPlugin());
+		plugIns.add(new ColorPlugin());
+		plugIns.add(new LogPlugin());
 		for (PlugInInterface pi : plugIns) {
 			headersOfPlugins.put(pi.getHeaders(), pi);
 		}
@@ -99,6 +106,11 @@ public class Server {
 																																				// copy
 			for (PlugInInterface pi : plugIns) {
 				latestConnections = pi.alterBroadCastGroup(latestConnections);
+			}
+			if (latestConnections != null) {
+				for (PlugInInterface pi : plugIns) {
+					pi.logAction(this, msg);
+				}
 			}
 			Iterator iterator = latestConnections.iterator();
 			while (iterator.hasNext()) {

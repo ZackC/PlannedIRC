@@ -11,6 +11,10 @@ import java.util.List;
 
 import com.irc.project.Client.Framework.PlugInInterface;
 import com.irc.project.Client.Framework.Authentication.AuthenticationPlugin;
+import com.irc.project.Client.Framework.ColorPlugin.ColorPlugin;
+import com.irc.project.Client.Framework.LogPlugin.LogPlugin;
+import com.irc.project.Client.Framework.ReverseEnryptionPlugin.ReverseEncryptionPlugin;
+import com.irc.project.Client.Framework.Rot13Plugin.Rot13EncryptionPlugin;
 import com.irc.project.Message.GeneralMessageType;
 import com.irc.project.Message.Message;
 
@@ -23,7 +27,7 @@ public class Client implements Runnable {
 			throw new RuntimeException("Syntax: ChatClient <host> <port>");
 
 		Client client = new Client(args[0], Integer.parseInt(args[1]));
-		new Gui("Chat " + args[0] + ":" + args[1], client);
+
 	}
 
 	protected ObjectInputStream inputStream;
@@ -31,6 +35,8 @@ public class Client implements Runnable {
 	protected ObjectOutputStream outputStream;
 
 	protected Thread thread;
+
+	protected Gui g;
 
 	/**
 	 * array list of all plug-ins
@@ -40,8 +46,13 @@ public class Client implements Runnable {
 	HashMap<List<String>, PlugInInterface> headersOfPlugins = new HashMap<List<String>, PlugInInterface>();
 
 	public Client(String host, int port) {
+		// add the plugins to the system here
 		plugIns.add(new AuthenticationPlugin());
-		// plugIns.add(new Rot13EncryptionPlugin());
+		plugIns.add(new Rot13EncryptionPlugin());
+		plugIns.add(new ReverseEncryptionPlugin());
+		plugIns.add(new ColorPlugin());
+		plugIns.add(new LogPlugin());
+
 		try {
 
 			System.out.println("Connecting to " + host + " (port " + port + ")...");
@@ -49,7 +60,9 @@ public class Client implements Runnable {
 			this.outputStream = new ObjectOutputStream((s.getOutputStream()));
 			this.inputStream = new ObjectInputStream((s.getInputStream()));
 			for (PlugInInterface pi : plugIns) {
-				headersOfPlugins.put(pi.getHeaders(), pi);
+				if (pi.getHeaders() != null) {
+					headersOfPlugins.put(pi.getHeaders(), pi);
+				}
 			}
 			for (PlugInInterface pi : plugIns) {
 				pi.logInAction(this);
@@ -59,6 +72,11 @@ public class Client implements Runnable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		g = new Gui("Chat " + host + ":" + new Integer(port).toString(), this);
+	}
+
+	public Gui getGui() {
+		return g;
 	}
 
 	public ObjectInputStream getInputStream() {
@@ -68,6 +86,7 @@ public class Client implements Runnable {
 	/**
 	 * main method. waits for incoming messages.
 	 */
+	@Override
 	public void run() {
 		try {
 			while (true) {
@@ -112,11 +131,21 @@ public class Client implements Runnable {
 					frontOfCurrentHeader = currentHeader;
 				}
 				System.out.println("front of current header: " + frontOfCurrentHeader);
-				for (List<String> headerList : headersOfPlugins.keySet()) {
-					if (headerList.contains(frontOfCurrentHeader)) {
-						// assuming headers don't conflict at the moment
-						PlugInInterface pi = headersOfPlugins.get(headerList);
-						msg = pi.recieveMessageAction(this, (GeneralMessageType) msg, null);
+				System.out.println("original header: "
+						+ ((GeneralMessageType) msg).getHeader());
+				if (!frontOfCurrentHeader.equals("msg")) {
+					for (List<String> headerList : headersOfPlugins.keySet()) {
+						System.out.println("List" + headerList.toString());
+						System.out.println("front: " + frontOfCurrentHeader);
+						for (String header : headerList) {
+							if (frontOfCurrentHeader.startsWith(header)) {
+								System.out.println("found match");
+								// assuming headers don't conflict at the moment
+								PlugInInterface pi = headersOfPlugins.get(headerList);
+								msg = pi.recieveMessageAction(this, (GeneralMessageType) msg,
+										null);
+							}
+						}
 					}
 				}
 				if (pos != -1) {
@@ -126,6 +155,9 @@ public class Client implements Runnable {
 			}
 		}
 		if (msg instanceof Message) {
+			for (PlugInInterface pi : plugIns) {
+				pi.logAction(this, (Message) msg);
+			}
 			fireAddLine(((Message) msg).getContent() + "\n");
 		}
 	}
@@ -139,6 +171,8 @@ public class Client implements Runnable {
 			msg = pi.sendMessageAction(msg);
 		}
 		try {
+			System.out.println("sending message with header: " + msg.getHeader());
+			System.out.println("sending message with content: " + msg.getContent());
 			outputStream.writeObject(msg);
 			outputStream.flush();
 		} catch (IOException ex) {

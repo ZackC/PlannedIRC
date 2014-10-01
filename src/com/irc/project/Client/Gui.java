@@ -51,10 +51,11 @@ public class Gui extends Frame implements ChatLineListener {
 		// sends the message in the text box when enter is pressed if the text is
 		// not empty
 		inputField.addKeyListener(new KeyAdapter() {
+			@Override
 			public void keyPressed(KeyEvent evt) {
 				if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
 					if (!inputField.getText().trim().equals("")) {
-						chatClient.send((String) inputField.getText());
+						chatClient.send(inputField.getText());
 						inputField.setText("");
 					}
 				}
@@ -67,6 +68,10 @@ public class Gui extends Frame implements ChatLineListener {
 
 	}
 
+	public TextArea getTextArea() {
+		return outputTextbox;
+	}
+
 	public Client getClient() {
 		return chatClient;
 	}
@@ -75,6 +80,7 @@ public class Gui extends Frame implements ChatLineListener {
 	 * this method gets called every time a new message is received (observer
 	 * pattern)
 	 */
+	@Override
 	public void newChatLine(String line) {
 		outputTextbox.append(line);
 	}
@@ -82,11 +88,12 @@ public class Gui extends Frame implements ChatLineListener {
 	/**
 	 * handles AWT events (closing window)
 	 */
+	@Override
 	public boolean handleEvent(Event e) {
 
 		if ((e.target == this) && (e.id == Event.WINDOW_DESTROY)) {
-			if (chatClient != null)
-				chatClient.stop();
+			// if (chatClient != null)
+			// chatClient.stop();These lines throw an error for me.
 			setVisible(false);
 			System.exit(0);
 			return true;

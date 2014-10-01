@@ -1,6 +1,7 @@
 package com.irc.project.Client.Framework;
 
 import java.awt.Panel;
+import java.awt.TextArea;
 import java.util.HashSet;
 import java.util.List;
 
@@ -20,7 +21,7 @@ public interface PlugInInterface {
 	public abstract GeneralMessageType recieveMessageAction(Object type,
 			GeneralMessageType msg, ServerConnection sc);
 
-	public abstract void drawSelectionOption(Panel panel);
+	public abstract void drawSelectionOption(Panel panel, TextArea ta);
 
 	public abstract HashSet<ServerConnection> alterBroadCastGroup(
 			HashSet<ServerConnection> connections);
@@ -29,5 +30,7 @@ public interface PlugInInterface {
 
 	// this is the list of headers the plug handles
 	public List<String> getHeaders();
+
+	public void logAction(Object type, GeneralMessageType msg);
 
 }

@@ -5,6 +5,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+import com.irc.project.Client.Framework.PlugInInterface;
 import com.irc.project.Message.GeneralMessageType;
 import com.irc.project.Message.Message;
 
@@ -37,6 +38,7 @@ public class ServerConnection extends Thread {
 	/**
 	 * waits for incoming messages from the socket
 	 */
+	@Override
 	public void run() {
 		String clientName = socket.getInetAddress().toString();
 		try {
@@ -77,7 +79,13 @@ public class ServerConnection extends Thread {
 	 */
 	private void handleIncomingMessage(String name, Object msg) {
 		if (msg instanceof GeneralMessageType)
-			server.broadcast((GeneralMessageType) msg);
+			for (PlugInInterface pi : server.getPlugIns()) {
+				msg = pi.recieveMessageAction(server, (GeneralMessageType) msg, this);
+				if (msg == null) {
+					return;
+				}
+			}
+		server.broadcast((GeneralMessageType) msg);
 	}
 
 	/**

@@ -3,6 +3,7 @@ package com.irc.project.Client.Framework.Authentication;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Panel;
+import java.awt.TextArea;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.HashSet;
@@ -37,17 +38,18 @@ public class AuthenticationPlugin implements PlugInInterface {
 			;
 			frame.getContentPane().add(passwordField);
 			passwordField.addKeyListener(new KeyAdapter() {
+				@Override
 				public void keyPressed(KeyEvent evt) {
 					if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
 						if (!passwordField.getText().trim().equals("")) {
-							password = (String) passwordField.getText();
+							password = passwordField.getText();
 							passwordField.setText("");
 						}
 					}
 				}
 			});
 			frame.setSize(300, 40);
-			// frame.pack();
+			frame.pack();
 			frame.setVisible(true);
 			while (password == null) {
 				try {
@@ -68,16 +70,18 @@ public class AuthenticationPlugin implements PlugInInterface {
 			checkPasswordField.setPreferredSize(new Dimension(150, 30));
 			frame.getContentPane().add(checkPasswordField);
 			checkPasswordField.addKeyListener(new KeyAdapter() {
+				@Override
 				public void keyPressed(KeyEvent evt) {
 					if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
 						if (!checkPasswordField.getText().trim().equals("")) {
-							System.out.println("set password");
-							password = (String) checkPasswordField.getText();
+							System.out.println("client entered a possible password");
+							password = checkPasswordField.getText();
 							checkPasswordField.setText("");
 						}
 					}
 				}
 			});
+			frame.setSize(300, 60);
 			frame.pack();
 			frame.setVisible(true);
 			boolean correctPassword = false;
@@ -90,7 +94,7 @@ public class AuthenticationPlugin implements PlugInInterface {
 						e.printStackTrace();
 					}
 				}
-				System.out.println("password is now: " + password);
+				System.out.println("the entered password is: " + password);
 				// need to send this to the server and have it check for users
 				((Client) type).send(new Message("authentication", password));
 				System.out.println("sent message");
@@ -151,6 +155,7 @@ public class AuthenticationPlugin implements PlugInInterface {
 					System.out.println("authenticated client");
 					sc.send(new Message("authentication", "valid"));
 					System.out.println("Server sent confirmation message");
+					return null;
 				}
 			}
 		}
@@ -179,9 +184,14 @@ public class AuthenticationPlugin implements PlugInInterface {
 	}
 
 	@Override
-	public void drawSelectionOption(Panel panel) {
+	public void drawSelectionOption(Panel panel, TextArea ta) {
 		// not used in this plugin
 
+	}
+
+	@Override
+	public void logAction(Object type, GeneralMessageType msg) {
+		// not used in this plugin
 	}
 
 }
