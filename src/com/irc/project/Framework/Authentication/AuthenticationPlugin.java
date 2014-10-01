@@ -71,7 +71,7 @@ public class AuthenticationPlugin implements PlugInInterface {
 			JPanel usernamePanel = new JPanel();
 			usernamePanel.setLayout(new FlowLayout());
 			usernamePanel.add(new JLabel("Enter username: "));
-			JTextField userNameField = new JTextField();
+			final JTextField userNameField = new JTextField();
 			userNameField.setPreferredSize(new Dimension(150, 30));
 			usernamePanel.add(userNameField);
 			frame.add(usernamePanel);
@@ -85,7 +85,8 @@ public class AuthenticationPlugin implements PlugInInterface {
 				@Override
 				public void keyPressed(KeyEvent evt) {
 					if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-						if (!checkPasswordField.getText().trim().equals("")) {
+						if (!checkPasswordField.getText().trim().equals("")
+								&& !userNameField.getText().trim().equals("")) {
 							System.out.println("client entered a possible password");
 							password = checkPasswordField.getText();
 							checkPasswordField.setText("");
@@ -168,8 +169,12 @@ public class AuthenticationPlugin implements PlugInInterface {
 					sc.send(new Message("authentication", "valid"));
 					System.out.println("Server sent confirmation message");
 					return null;
+				} else {
+					sc.send(new Message("authentication", "notvalid"));
+					return null;
 				}
 			}
+
 		}
 		return msg;
 
