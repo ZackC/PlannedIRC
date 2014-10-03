@@ -12,6 +12,7 @@ import java.util.List;
 import com.irc.project.Framework.PlugInInterface;
 import com.irc.project.Framework.Authentication.AuthenticationPlugin;
 import com.irc.project.Framework.ColorPlugin.ColorPlugin;
+import com.irc.project.Framework.FilterPlugin.ProfanityFilterPlugin;
 import com.irc.project.Framework.LogPlugin.LogPlugin;
 import com.irc.project.Framework.ReverseEnryptionPlugin.ReverseEncryptionPlugin;
 import com.irc.project.Framework.Rot13Plugin.Rot13EncryptionPlugin;
@@ -55,6 +56,7 @@ public class Server {
 		plugIns.add(new ReverseEncryptionPlugin());
 		plugIns.add(new ColorPlugin());
 		plugIns.add(new LogPlugin());
+		plugIns.add(new ProfanityFilterPlugin());
 		for (PlugInInterface pi : plugIns) {
 			headersOfPlugins.put(pi.getHeaders(), pi);
 		}

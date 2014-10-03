@@ -36,12 +36,14 @@ public class Rot13Message implements GeneralMessageType, Serializable {
 		char[] oldContentArray = message.toCharArray();
 		for (int i = 0; i < oldContentArray.length; i++) {
 			// System.out.println("old char: " + oldContentArray[i]);
-			int newValue = oldContentArray[i] + 13;
-			if (newValue > 122) {
-				newValue = newValue - 26;
+			if (oldContentArray[i] < 123 && oldContentArray[i] > 96) {
+				int newValue = oldContentArray[i] + 13;
+				if (newValue > 122) {
+					newValue = newValue - 26;
+				}
+				oldContentArray[i] = (char) (newValue);
+				// System.out.println("new char: " + oldContentArray[i]);
 			}
-			oldContentArray[i] = (char) (newValue);
-			// System.out.println("new char: " + oldContentArray[i]);
 		}
 		System.out.println("trasformed result: " + new String(oldContentArray));
 		return new String(oldContentArray);

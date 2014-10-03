@@ -12,6 +12,7 @@ import java.util.List;
 import com.irc.project.Framework.PlugInInterface;
 import com.irc.project.Framework.Authentication.AuthenticationPlugin;
 import com.irc.project.Framework.ColorPlugin.ColorPlugin;
+import com.irc.project.Framework.FilterPlugin.ProfanityFilterPlugin;
 import com.irc.project.Framework.LogPlugin.LogPlugin;
 import com.irc.project.Framework.ReverseEnryptionPlugin.ReverseEncryptionPlugin;
 import com.irc.project.Framework.Rot13Plugin.Rot13EncryptionPlugin;
@@ -52,6 +53,7 @@ public class Client implements Runnable {
 		plugIns.add(new ReverseEncryptionPlugin());
 		plugIns.add(new ColorPlugin());
 		plugIns.add(new LogPlugin());
+		plugIns.add(new ProfanityFilterPlugin());
 
 		try {
 
@@ -133,20 +135,20 @@ public class Client implements Runnable {
 				System.out.println("front of current header: " + frontOfCurrentHeader);
 				System.out.println("original header: "
 						+ ((GeneralMessageType) msg).getHeader());
-				if (!frontOfCurrentHeader.equals("msg")) {
-					for (List<String> headerList : headersOfPlugins.keySet()) {
-						System.out.println("List" + headerList.toString());
-						System.out.println("front: " + frontOfCurrentHeader);
-						for (String header : headerList) {
-							if (frontOfCurrentHeader.startsWith(header)) {
-								System.out.println("found match");
-								// assuming headers don't conflict at the moment
-								PlugInInterface pi = headersOfPlugins.get(headerList);
-								msg = pi.recieveMessageAction(this, (GeneralMessageType) msg,
-										null);
-							}
+				// if (!frontOfCurrentHeader.equals("msg")) {
+				for (List<String> headerList : headersOfPlugins.keySet()) {
+					System.out.println("List" + headerList.toString());
+					System.out.println("front: " + frontOfCurrentHeader);
+					for (String header : headerList) {
+						if (frontOfCurrentHeader.startsWith(header)) {
+							System.out.println("found match");
+							// assuming headers don't conflict at the moment
+							PlugInInterface pi = headersOfPlugins.get(headerList);
+							msg = pi.recieveMessageAction(this, (GeneralMessageType) msg,
+									null);
 						}
 					}
+					// }
 				}
 				if (pos != -1) {
 					currentHeader = currentHeader.substring(pos + 2);
